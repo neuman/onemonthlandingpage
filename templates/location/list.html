@@ -1,15 +1,27 @@
 {% extends "base/theme.html" %}
 {% block scripts %}
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script src="{{ STATIC_URL }}theme/js/maps.js"></script>
+<script>
+$(document).ready(function(){
+  initMap();
+  initMarkers("/api/location/");
+  map.fitBounds(bound);
+});
+</script>
 {% endblock %}
 {% block maincontent %}
        <!-- Services Section -->
+       <div class="wide-map" id="map-canvas"></div>
     <section id="services">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <h2 class="section-heading">Newest Locations</h2>
+                    
                 </div>
             </div>
+
             {% for location in locations %}
             <div class="panel">
                 <div class="row">
