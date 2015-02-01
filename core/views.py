@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView
 import core.models as cm
+import core.forms as cf
 import decimal
 import json
 
@@ -64,5 +66,31 @@ class LocationDetailView(TemplateView):
         # Call the base implementation first to get a context
         context = super(LocationDetailView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the books
-        context['location'] = cm.Location.objects.get(id=self.kwargs['pk'])
+        location = cm.Location.objects.get(id=self.kwargs['pk'])
+        reviews = location.review_set.exclude(user=self.request.user)
+        user_reviews = cm.Review.objects.filter(user=self.request.user, location=location)
+        user_review = None
+        if user_reviews.count() > 0:
+            user_review = user_reviews[0]
+        context['location'] = location
+        context['reviews'] = reviews
+        context['user_review'] = user_review
         return context
+
+class LocationCreateView(CreateView):
+    model = cm.Location
+    template_name = 'base/form.html'
+    form_class = cf.LocationForm
+
+class ReviewCreateView(CreateView):
+    model = cm.Review
+    template_name = 'base/form.html'
+    form_class = cf.ReviewForm
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.location = cm.Location.objects.get(id=self.kwargs['pk'])
+        return super(ReviewCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return self.object.location.get_absolute_url()

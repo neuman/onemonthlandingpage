@@ -51,7 +51,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top">Yelp Knockoff</a>
+                <a class="navbar-brand page-scroll" href="/">Yelp Knockoff</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -64,8 +64,13 @@
                         <a class="page-scroll" href="/">About</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="/location/list">Newest Locations</a>
+                        <a class="page-scroll" href="/location">Browse</a>
                     </li>
+                    {% if user.is_authenticated %}
+                        <li class="active">
+                            <a href="/location/create">Add a Location</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -88,8 +93,7 @@
     
 
     <!-- Contact Form JavaScript -->
-    <script src="{{ STATIC_URL }}theme/js/jqBootstrapValidation.js"></script>
-    <script src="{{ STATIC_URL }}theme/js/contact_me.js"></script>
+
 
     <!-- Custom Theme JavaScript -->
     <script src="{{ STATIC_URL }}theme/js/agency.js"></script>
