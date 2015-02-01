@@ -113,14 +113,14 @@ class ReviewUpdateView(UpdateView):
     def get_success_url(self):
         return self.object.location.get_absolute_url()
 
-class SearchView(TemplateView):
+class SearchView(ListView):
     template_name = 'location/list.html'
+    model = cm.Location
+    paginate_by = 5
 
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(SearchView, self).get_context_data(**kwargs)
-        context['locations'] = cm.Location.objects.filter(title__icontains=self.request.GET.get('query', ''))
-        return context
+    def get_queryset(self):
+        return cm.Location.objects.filter(title__icontains=self.request.GET.get('query', ''))
+        
 
 
 @sitegate_view(widget_attrs={'class': 'form-control', 'placeholder': lambda f: f.label}, template='form_bootstrap3')  # This also prevents logged in users from accessing our sign in/sign up page.
