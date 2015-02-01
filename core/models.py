@@ -59,7 +59,7 @@ class Location(models.Model):
     def get_pretty_rating(self):
         count = self.review_set.all().count()
         if count==0:
-            return "No Ratings Yet"
+            return "No Reviews Yet"
         else:
             return "Average Rating of "+str(self.get_average_rating())+" From "+str(count)+" Reviews"
 

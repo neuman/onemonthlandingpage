@@ -1,3 +1,4 @@
+    
 <!DOCTYPE html>
 <html lang="en">
 
@@ -68,15 +69,26 @@
                     </li>
                     {% if user.is_authenticated %}
                         <li class="active">
-                            <a href="/location/create">Add a Location</a>
+                            <a href="{% url 'location_create' %}">Add a Location</a>
+                        </li>
+                    {% else %}
+                        <li class="active">
+                            <a href="{% url 'entrance' %}">Sign In</a>
                         </li>
                     {% endif %}
                 </ul>
+                <form action="/search/" class="navbar-form navbar-right" method="get">
+                    <div class="form-group">
+                        <input type="text" placeholder="Search" class="form-control" name="query" autocomplete="off">
+                    </div>
+                </form>
             </div>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container-fluid -->
     </nav>
+    <div class="header-buffer">
+    </div>
 {% block maincontent %}
 {% endblock %}
 

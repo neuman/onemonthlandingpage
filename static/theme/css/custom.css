@@ -5,3 +5,15 @@
 .short-map{
     height:267px;
 }
+
+.header-buffer{
+    height:70px;
+}
+
+.after-header-buffer{
+    height:45px;
+}
+
+section{
+    padding-top: 0px;
+}

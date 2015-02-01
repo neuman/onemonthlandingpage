@@ -11,6 +11,8 @@ $(document).ready(function(){
 </script>
 {% endblock %}
 {% block maincontent %}
+    <div class="header-buffer">
+    </div>
        <!-- Services Section -->
     <section id="services">
         <div class="container">
@@ -27,17 +29,19 @@ $(document).ready(function(){
                         <a href="{{ location.get_absolute_url }}">
                             <img src="{{ location.get_image_url }}" class="img-responsive img-centered" alt="">
                         </a>
+                {% if user.is_authenticated %}
                 <div id="buttons" class=" row text-center">
                 <br>
                     <div class="btn-group" role="group" aria-label="...">
-                        <button type="button" class="btn btn-default">Update Details</button>
+                        <a type="button" href="{% url 'location_update' pk=location.id %}" class="btn btn-default">Update Details</a>
                         {% if user_review %}
-                        <button type="button" class="btn btn-default">Update Review</button>
+                        <a type="button" href="{% url 'review_update' pk=location.id %}" class="btn btn-default">Update Review</a>
                         {% else %}
-                        <a type="button" href="{% url 'location_review' pk=location.id %}" class="btn btn-default">Add Your Review</a>
+                        <a type="button" href="{% url 'review_create' pk=location.id %}" class="btn btn-default">Add Your Review</a>
                         {% endif %}
                     </div>
                 </div>
+                {% endif %}
                     </div>
                     {% endif %}
                     <div class="{% if location.get_image_url %}col-md-8{% else %}col-md-12{% endif %}">
@@ -47,7 +51,7 @@ $(document).ready(function(){
                 <hr>
                 <div class="row">
                     <div class="col-md-12">
-                        <p class="text-muted">{{ location.description}}</p>
+                        <p class="">{{ location.description}}</p>
                     </div>
                 </div>
             </div>
@@ -55,19 +59,24 @@ $(document).ready(function(){
                 
                 <div class="row">
                     <div class="col-md-8 pull-right">
-                    {% with user_review as review %}
-                        <div class="row">
-                            <ol class="breadcrumb">
-                            <li class="active">{{ review.user.get_full_name }}</li>
-                            <li class="active">{{ review.created_at | date }}</li>
-                            <div class="pull-right">
-                            {{ review.get_rating_display }}
+                    {% if user_review %}
+                        {% with user_review as review %}
+                            <div class="row">
+                                <ol class="breadcrumb">
+                                <li class="active">{{ review.user.get_full_name }}</li>
+                                <li class="active">{{ review.created_at | date }}</li>
+                                <div class="pull-right">
+                                {{ review.get_rating_display }}
+                                </div>
+                                </ol>
                             </div>
-                            </ol>
+                            <div class="col-md-12">
+                        <p>{{ review.description }}</p>
+                        <hr>
                         </div>
-                    <p>{{ review.description }}</p>
-                    <hr>
-                    {% endwith %}
+                        
+                        {% endwith %}
+                    {% endif %}
                     {% for review in reviews %}
                         <div class="row">
                             <ol class="breadcrumb">

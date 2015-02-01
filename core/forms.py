@@ -23,3 +23,6 @@ class ReviewForm(BootstrapForm):
     class Meta:
         model = cm.Review
         exclude = ['location', 'created_at','user']
+
+class SearchForm(forms.Form):
+    query = forms.CharField(max_length=500)

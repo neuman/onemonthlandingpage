@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.shortcuts import render
+from sitegate.decorators import redirect_signedin, sitegate_view
 import core.models as cm
 import core.forms as cf
 import decimal
@@ -16,16 +19,10 @@ def decimal_default(obj):
 class LandingView(TemplateView):
     template_name = 'base/index.html'
 
-class LocationListView(TemplateView):
+class LocationListView(ListView):
     template_name = 'location/list.html'
-
-    def get_context_data(self, **kwargs):
-
-        # Call the base implementation first to get a context
-        context = super(LocationListView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        context['locations'] = cm.Location.objects.all().order_by('created_at')
-        return context
+    model = cm.Location
+    paginate_by = 5
 
 class LocationAPIView(TemplateView):
     template_name = 'location/list.html'
@@ -67,17 +64,27 @@ class LocationDetailView(TemplateView):
         context = super(LocationDetailView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the books
         location = cm.Location.objects.get(id=self.kwargs['pk'])
-        reviews = location.review_set.exclude(user=self.request.user)
-        user_reviews = cm.Review.objects.filter(user=self.request.user, location=location)
         user_review = None
-        if user_reviews.count() > 0:
-            user_review = user_reviews[0]
+        if self.request.user.is_authenticated():
+            reviews = location.review_set.exclude(user=self.request.user)
+            user_reviews = cm.Review.objects.filter(user=self.request.user, location=location)
+            if user_reviews.count() > 0:
+                user_review = user_reviews[0]
+        else:
+            reviews = location.review_set.all()
+        
+
         context['location'] = location
         context['reviews'] = reviews
         context['user_review'] = user_review
         return context
 
 class LocationCreateView(CreateView):
+    model = cm.Location
+    template_name = 'base/form.html'
+    form_class = cf.LocationForm
+
+class LocationUpdateView(UpdateView):
     model = cm.Location
     template_name = 'base/form.html'
     form_class = cf.LocationForm
@@ -94,3 +101,28 @@ class ReviewCreateView(CreateView):
 
     def get_success_url(self):
         return self.object.location.get_absolute_url()
+
+class ReviewUpdateView(UpdateView):
+    model = cm.Review
+    template_name = 'base/form.html'
+    form_class = cf.ReviewForm
+
+    def get_object(self):
+        return cm.Review.objects.get(location__id=self.kwargs['pk'], user=self.request.user)
+
+    def get_success_url(self):
+        return self.object.location.get_absolute_url()
+
+class SearchView(TemplateView):
+    template_name = 'location/list.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(SearchView, self).get_context_data(**kwargs)
+        context['locations'] = cm.Location.objects.filter(title__icontains=self.request.GET.get('query', ''))
+        return context
+
+
+@sitegate_view(widget_attrs={'class': 'form-control', 'placeholder': lambda f: f.label}, template='form_bootstrap3')  # This also prevents logged in users from accessing our sign in/sign up page.
+def entrance(request):
+    return render(request, 'base/entrance.html', {'title': 'Sign in & Sign up'})
