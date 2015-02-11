@@ -13,7 +13,6 @@
     <div class="form-group warning">
      <label for="exampleInputFile">{{ field.label }}</label>
      {{ field }}
-
      {% if field.help_text %}<p class="help-block">{{ field.help_text }}</p>{% endif %}
    </div>
    {% if field.errors %}
@@ -26,7 +25,6 @@
    <input type="submit" class="btn btn-success" role="button" value="{{ verb|default:"Submit" }}" />
  </form>
 </div>
-
 {% endif %}
 </div>
 </div>

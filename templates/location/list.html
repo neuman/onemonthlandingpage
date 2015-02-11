@@ -26,7 +26,6 @@ $(document).ready(function(){
                     <ol class="breadcrumb">
                     <li class="active">{{ location.get_category_display }}</li>
                     <li class="active"><a href="{{ location.get_absolute_url }}">{{ location.title }}</a></li>
-                    
                     <div class="pull-right">
                     {{ location.get_pretty_rating }}
                     </div>
@@ -47,12 +46,10 @@ $(document).ready(function(){
                         </span>
                         <p class="text-muted">{{ location.description}}</p>
                     </div>
-
                 </div>
             </div>
             {% endfor %}
             {% bootstrap_paginate page_obj range=10 show_prev_next="false" show_first_last="true" %}
-
         </div>
     </section>
 {% endblock %}
