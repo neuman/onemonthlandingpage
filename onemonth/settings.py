@@ -38,7 +38,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'geoposition',
     'sitegate',
+    'bootstrap3',
     'bootstrap_pagination',
+    'addattr',
     'core'
 )
 

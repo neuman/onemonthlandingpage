@@ -1,3 +1,13 @@
 Django==1.7.4
+Pillow==2.7.0
 argparse==1.2.1
+django-appconf==1.0.1
+django-bootstrap-pagination==1.5.1
+django-bootstrap3==5.1.1
+django-etc==0.7.0
+django-geoposition==0.2.2
+django-sitegate==0.10.0
+djangoaddattr==0.0.1
+ipython==2.4.1
+six==1.9.0
 wsgiref==0.1.2

@@ -82,17 +82,19 @@ class LocationDetailView(TemplateView):
 class LocationCreateView(CreateView):
     model = cm.Location
     template_name = 'base/form.html'
-    form_class = cf.LocationForm
+    fields = ['position', 'description', 'category', 'image_file']
 
 class LocationUpdateView(UpdateView):
     model = cm.Location
     template_name = 'base/form.html'
-    form_class = cf.LocationForm
+    model = cm.Location
+    fields = ['position', 'description', 'category', 'image_file']
 
 class ReviewCreateView(CreateView):
     model = cm.Review
     template_name = 'base/form.html'
-    form_class = cf.ReviewForm
+    model = cm.Review
+    fields = ['description','rating']
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -105,7 +107,8 @@ class ReviewCreateView(CreateView):
 class ReviewUpdateView(UpdateView):
     model = cm.Review
     template_name = 'base/form.html'
-    form_class = cf.ReviewForm
+    model = cm.Review
+    fields = ['description','rating']
 
     def get_object(self):
         return cm.Review.objects.get(location__id=self.kwargs['pk'], user=self.request.user)
